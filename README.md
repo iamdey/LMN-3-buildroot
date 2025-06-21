@@ -3,6 +3,8 @@
 ## TODO:
 
 - [ ] Start xterm at boot
+- [ ] Drop ethernet support (qemu)
+- [ ] Standalone buildroot docker container
 
 ## Usage:
 
@@ -35,6 +37,27 @@ Build
 
 ```bash
 make O=/dist
+```
+
+## Debug
+
+Prerequisite: qemu
+
+```bash
+# Check image size
+qemu-img info dist/images/sdcard.img
+
+# fix image size
+qemu-img resize -f raw dist/images/sdcard.img 256M
+
+# Run rpi emulator
+qemu-system-arm -M raspi2b -m 1024 \
+-kernel dist/images/zImage \
+-dtb dist/images/bcm2709-rpi-2-b.dtb \
+-drive if=sd,driver=raw,file=dist/images/sdcard.img \
+-append "console=ttyAMA0 root=/dev/mmcblk0p2 rw rootwait rootfstype=ext4" \
+-device usb-net,netdev=net0 -netdev user,id=net0,hostfwd=tcp::5555-:80 \
+-serial stdio
 ```
 
 ## Steps
