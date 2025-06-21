@@ -1,0 +1,1 @@
+include $(sort $(wildcard $(BR2_EXTERNAL_PI2_CONFIG_PATH)/package/*/*.mk))

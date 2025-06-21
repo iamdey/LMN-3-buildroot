@@ -1,0 +1,1 @@
+source "$BR2_EXTERNAL_PI2_CONFIG_PATH/package/hello/Config.in"
