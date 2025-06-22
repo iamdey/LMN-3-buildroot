@@ -9,6 +9,7 @@
 cf. https://github.com/Enchan1207/rpi-buildroot/wiki/Usage
 
 load buildroot container (this config file is pretty useless)
+
 ```bash
 buildroot.sh hello.config
 ```
@@ -35,6 +36,15 @@ Build
 
 ```bash
 make O=/dist
+```
+
+Create a sysroot to build lmn-3-DAW
+
+```bash
+# produce dist/host files
+make O=/dist toolchain
+# produce dist/images/…sdk-buildroot.tar.gz
+make O=/dist sdk
 ```
 
 ## Steps
@@ -67,18 +77,29 @@ Target packages
 
 https://stackoverflow.com/questions/71656946/how-to-build-a-linux-based-custom-os-with-gui-for-raspberry-pi-3b
 
-
--  X Windows System Server --> modular xorg ( The X.Org project provides an open source implementation of the X Window)
--  X.org X Window System, X11R7 --> X11R7 Applications --> xinit (gives startx command to begin GUI)
--  X.org X Window System, X11R7 --> X11R7 Servers --> xorg-server (X server component)
--  X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-input-keyboard (very common interface :-)
--  X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-input-mouse X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-video-cirrus (Cirrus VGA is emulated in QEMU)
--  X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-video-fbdev (or you can use framebuffer)
--  X.org X Window System, X11R7 --> X11R7 Application --> you can add some useful applications
--  X.org X Window System, X11R7 --> MatchBow Window Manager (The Matchbox window manager is responsible for managing X11 client window geometry and stacking order, as well as providing decorations and controls) or any other window manager of your choice.
-X.org X Window System, X11R7 --> rxtv (Terminal emulation program in X
+- X Windows System Server --> modular xorg ( The X.Org project provides an open
+  source implementation of the X Window)
+- X.org X Window System, X11R7 --> X11R7 Applications --> xinit (gives startx
+  command to begin GUI)
+- X.org X Window System, X11R7 --> X11R7 Servers --> xorg-server (X server
+  component)
+- X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-input-keyboard (very
+  common interface :-)
+- X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-input-mouse X.org X
+  Window System, X11R7 --> X11R7 Drivers --> xf86-video-cirrus (Cirrus VGA is
+  emulated in QEMU)
+- X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-video-fbdev (or you
+  can use framebuffer)
+- X.org X Window System, X11R7 --> X11R7 Application --> you can add some useful
+  applications
+- X.org X Window System, X11R7 --> MatchBow Window Manager (The Matchbox window
+  manager is responsible for managing X11 client window geometry and stacking
+  order, as well as providing decorations and controls) or any other window
+  manager of your choice. X.org X Window System, X11R7 --> rxtv (Terminal
+  emulation program in X
 
 ### deps to install for juce:
+
 (to check)
 
 ```
