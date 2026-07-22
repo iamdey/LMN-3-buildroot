@@ -1,3 +1,5 @@
 #!/bin/bash
 
-docker build --tag iamdey/lmn-3-buildroot
+cwd=$(dirname $0)/../
+
+docker build --tag iamdey/lmn-3-buildroot $cwd

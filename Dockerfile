@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-ARG buildroot_version=2025.02.3
+ARG buildroot_version=2026.05
 RUN test -n "$buildroot_version" || (echo "required argument 'buildroot_version' does not specified." && false)
 
 RUN apt-get update && apt upgrade -y && apt-get install -y --no-install-recommends \
@@ -10,7 +10,8 @@ RUN apt-get update && apt upgrade -y && apt-get install -y --no-install-recommen
     dpkg-reconfigure tzdata
 
 # cf: https://buildroot.org/downloads/manual/manual.html#requirement-mandatory
-RUN apt-get update && apt upgrade -y && apt-get install -y --no-install-recommends \
+RUN dpkg --add-architecture i386 \
+    && apt-get update && apt upgrade -y && apt-get install -y --no-install-recommends \
     git sed binutils build-essential diffutils patch gzip bzip2 perl tar cpio \
     unzip rsync file bc wget findutils libncursesw5-dev ssh \
     && rm -rf /var/lib/apt/lists/*
