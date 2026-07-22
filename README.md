@@ -3,15 +3,22 @@
 ## TODO:
 
 - [ ] Start xterm at boot
+- [ ] 8.5. Building out-of-tree (better files organization)
+- [x] test generated image
 
 ## Usage:
 
 cf. https://github.com/Enchan1207/rpi-buildroot/wiki/Usage
 
 load buildroot container (this config file is pretty useless)
+
+**On Host:**
+
 ```bash
-buildroot.sh hello.config
+bin/buildroot.sh hello.config
 ```
+
+**In docker env:**
 
 Then load the real config file
 
@@ -28,13 +35,68 @@ make O=/dist menuconfig
 Save minimal configuration
 
 ```bash
-make O=/dist savedefconfig BR2_DEFCONFIG=/dist/config/rpi2_hello_defconfig
+make O=/dist savedefconfig BR2_DEFCONFIG=/config/rpi2_hello_defconfig
 ```
 
-Build
+Build (takes a hour the first time, can be restarted if aborted)
 
 ```bash
-make O=/dist
+FORCE_UNSAFE_CONFIGURE=1 make O=/dist
+```
+
+Create a sysroot to build lmn-3-DAW
+
+```bash
+# produce dist/host files
+make O=/dist toolchain
+# produce dist/images/…sdk-buildroot.tar.gz
+make O=/dist sdk
+```
+
+## Tests
+
+Using qemu
+
+### Pre-requisite
+
+For raspi2b: Install qemu (armv7)
+
+```bash
+sudo apt install qemu-system-arm
+```
+
+### Prepare
+
+```bash
+sudo chown $USER: dist/images/*
+qemu-img resize dist/images/sdcard.img 256M
+```
+
+### Start
+
+cf. https://cboyer.github.io/linux/buildroot-raspberry/
+
+```bash
+# full net + tty
+qemu-system-arm \
+ -machine raspi2b \
+ -kernel dist/images/zImage \
+ -dtb dist/images/bcm2709-rpi-2-b.dtb \
+ -drive if=sd,driver=raw,file=dist/images/sdcard.img \
+ -append "console=ttyAMA0 root=/dev/mmcblk0p2 rw rootwait rootfstype=ext4" \
+ -device usb-net,netdev=net0 -netdev user,id=net0,hostfwd=tcp::5555-:80 \
+ -serial stdio
+
+# minimal
+qemu-system-arm \
+ -machine raspi2b \
+ -kernel dist/images/zImage \
+ -dtb dist/images/bcm2709-rpi-2-b.dtb \
+ -drive if=sd,driver=raw,file=dist/images/sdcard.img \
+ -append "root=/dev/mmcblk0p2 rw rootwait rootfstype=ext4" \
+ -device usb-mouse -device usb-kbd
+ -serial stdio
+
 ```
 
 ## Steps
@@ -67,18 +129,29 @@ Target packages
 
 https://stackoverflow.com/questions/71656946/how-to-build-a-linux-based-custom-os-with-gui-for-raspberry-pi-3b
 
-
--  X Windows System Server --> modular xorg ( The X.Org project provides an open source implementation of the X Window)
--  X.org X Window System, X11R7 --> X11R7 Applications --> xinit (gives startx command to begin GUI)
--  X.org X Window System, X11R7 --> X11R7 Servers --> xorg-server (X server component)
--  X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-input-keyboard (very common interface :-)
--  X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-input-mouse X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-video-cirrus (Cirrus VGA is emulated in QEMU)
--  X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-video-fbdev (or you can use framebuffer)
--  X.org X Window System, X11R7 --> X11R7 Application --> you can add some useful applications
--  X.org X Window System, X11R7 --> MatchBow Window Manager (The Matchbox window manager is responsible for managing X11 client window geometry and stacking order, as well as providing decorations and controls) or any other window manager of your choice.
-X.org X Window System, X11R7 --> rxtv (Terminal emulation program in X
+- X Windows System Server --> modular xorg ( The X.Org project provides an open
+  source implementation of the X Window)
+- X.org X Window System, X11R7 --> X11R7 Applications --> xinit (gives startx
+  command to begin GUI)
+- X.org X Window System, X11R7 --> X11R7 Servers --> xorg-server (X server
+  component)
+- X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-input-keyboard (very
+  common interface :-)
+- X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-input-mouse X.org X
+  Window System, X11R7 --> X11R7 Drivers --> xf86-video-cirrus (Cirrus VGA is
+  emulated in QEMU)
+- X.org X Window System, X11R7 --> X11R7 Drivers --> xf86-video-fbdev (or you
+  can use framebuffer)
+- X.org X Window System, X11R7 --> X11R7 Application --> you can add some useful
+  applications
+- X.org X Window System, X11R7 --> MatchBow Window Manager (The Matchbox window
+  manager is responsible for managing X11 client window geometry and stacking
+  order, as well as providing decorations and controls) or any other window
+  manager of your choice. X.org X Window System, X11R7 --> rxtv (Terminal
+  emulation program in X
 
 ### deps to install for juce:
+
 (to check)
 
 ```
