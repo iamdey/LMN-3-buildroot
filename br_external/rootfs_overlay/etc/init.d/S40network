@@ -11,6 +11,7 @@ case "$1" in
 	# printf "Starting network: "
 	# /sbin/ifup -a
 	# [ $? = 0 ] && echo "OK" || echo "FAIL"
+	echo "No network"
 	;;
   stop)
 	printf "Stopping network: "
