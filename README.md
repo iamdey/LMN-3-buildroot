@@ -38,6 +38,8 @@ Save minimal configuration
 make O=/dist savedefconfig BR2_DEFCONFIG=/config/rpi2_hello_defconfig
 ```
 
+_(Once the docker container is stop, fix the permissions on this file: `sudo chown -R $USER: config`)_
+
 Build (takes a hour the first time, can be restarted if aborted)
 
 ```bash
