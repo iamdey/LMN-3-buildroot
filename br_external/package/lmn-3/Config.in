@@ -2,6 +2,7 @@ config BR2_PACKAGE_LMN_3
     bool "lmn-3"
 
     select BR2_PACKAGE_XSERVER_XORG_SERVER
+    select BR2_PACKAGE_ALSA_UTILS
 
     help
-      Start xterm on boot
+      Start lmn-3 on boot

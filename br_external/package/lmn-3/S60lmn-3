@@ -2,13 +2,13 @@
 
 case "$1" in
     start)
-        printf "Starting xterm: "
-        startx $(which xterm) &
+        printf "Starting lmn-3: "
+        /bin/LMN-3 &
         [ $? = 0 ] && echo "OK" || echo "FAIL"
         ;;
     stop)
-        printf "Stopping xterm: "
-        killall xterm
+        printf "Stopping lmn-3: "
+        killall LMN-3
         [ $? = 0 ] && echo "OK" || echo "FAIL"
         ;;
     restart|reload)
