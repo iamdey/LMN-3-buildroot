@@ -3,8 +3,12 @@
 ## TODO:
 
 - [ ] Start xterm at boot
-- [ ] 8.5. Building out-of-tree (better files organization)
+- [x] 8.5. Building out-of-tree (better files organization)
 - [x] test generated image
+- [ ] Run lmn-3 on start
+- [ ] support many screens
+- [ ] support many boards
+- [ ] include some assets
 
 ## Usage:
 
@@ -15,27 +19,46 @@ load buildroot container (this config file is pretty useless)
 **On Host:**
 
 ```bash
-bin/buildroot.sh hello.config
+# host
+bin/buildroot.sh
 ```
+
+> docker container has buildroot environments variables so it's not necessary to repeat it on each commands:
+>
+> ```
+> O=/dist
+> BR2_EXTERNAL=/br_external
+> FORCE_UNSAFE_CONFIGURE=1
+> ```
 
 **In docker env:**
 
 Then load the real config file
 
 ```bash
-make O=/dist BR2_EXTERNAL=/dist/pi2-config defconfig BR2_DEFCONFIG=/dist/config/rpi2_hello_defconfig
+# docker
+make defconfig BR2_DEFCONFIG=/configs/rpi2_hello_defconfig
+```
+
+Or create a new configuration:
+
+```bash
+# docker
+make raspberrypi2_defconfig
 ```
 
 Configure
 
 ```bash
-make O=/dist menuconfig
+# docker
+make menuconfig
 ```
 
 Save minimal configuration
 
 ```bash
-make O=/dist savedefconfig BR2_DEFCONFIG=/config/rpi2_hello_defconfig
+# docker
+make savedefconfig BR2_DEFCONFIG=/configs/rpi2_hello_defconfig
 ```
 
 _(Once the docker container is stop, fix the permissions on this file: `sudo chown -R $USER: config`)_
@@ -43,16 +66,19 @@ _(Once the docker container is stop, fix the permissions on this file: `sudo cho
 Build (takes a hour the first time, can be restarted if aborted)
 
 ```bash
-FORCE_UNSAFE_CONFIGURE=1 make O=/dist
+# docker
+make
 ```
 
 Create a sysroot to build lmn-3-DAW
 
 ```bash
+# docker
+
 # produce dist/host files
-make O=/dist toolchain
+make toolchain
 # produce dist/images/…sdk-buildroot.tar.gz
-make O=/dist sdk
+make sdk
 ```
 
 ## Tests
@@ -64,12 +90,14 @@ Using qemu
 For raspi2b: Install qemu (armv7)
 
 ```bash
+# host
 sudo apt install qemu-system-arm
 ```
 
 ### Prepare
 
 ```bash
+# host
 sudo chown $USER: dist/images/*
 qemu-img resize dist/images/sdcard.img 256M
 ```
@@ -79,7 +107,9 @@ qemu-img resize dist/images/sdcard.img 256M
 cf. https://cboyer.github.io/linux/buildroot-raspberry/
 
 ```bash
-# full net + tty
+# host
+
+# full net + keyboard & mouse: doesn't work. cf. Troubleshoutings
 qemu-system-arm \
  -machine raspi2b \
  -kernel dist/images/zImage \
@@ -87,6 +117,7 @@ qemu-system-arm \
  -drive if=sd,driver=raw,file=dist/images/sdcard.img \
  -append "console=ttyAMA0 root=/dev/mmcblk0p2 rw rootwait rootfstype=ext4" \
  -device usb-net,netdev=net0 -netdev user,id=net0,hostfwd=tcp::5555-:80 \
+ -device usb-mouse -device usb-kbd \
  -serial stdio
 
 # minimal
@@ -96,9 +127,7 @@ qemu-system-arm \
  -dtb dist/images/bcm2709-rpi-2-b.dtb \
  -drive if=sd,driver=raw,file=dist/images/sdcard.img \
  -append "root=/dev/mmcblk0p2 rw rootwait rootfstype=ext4" \
- -device usb-mouse -device usb-kbd
  -serial stdio
-
 ```
 
 ## Steps
@@ -181,3 +210,40 @@ External options  --->
 System configuration  --->
    Root filesystem overlay directories ($(BR2_EXTERNAL_PI4_CONFIG_PATH)/custom-rootfs)
 ```
+
+## Troubleshoutings
+
+### Messing up the `target` directory
+
+The official way:
+
+```bash
+# docker
+make clean
+```
+
+Alternatively (to save re-build time) see https://stackoverflow.com/a/49862790
+
+```bash
+# docker
+rm -rf /dist/target
+find /dist/ -name ".stamp_target_installed" -delete
+rm -f /dist/build/host-gcc-final-*/.stamp_host_installed
+```
+
+### qemu: Kernel panic (qemu)
+
+> SMP: failed to stop secondary CPUs
+> [ 49.370383] ---[ end Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(179,2) ]---
+
+### qemu: Sending NMI from CPU 1,2,3 to CPUs 0
+
+> [ 25.102074] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> [ 25.109962] rcu: 0-...!: (2 GPs behind) idle=bd30/0/0x0 softirq=79/79 fqs=0 (false positive?)
+> [ 25.114226] rcu: 1-...!: (0 ticks this GP) idle=0288/0/0x0 softirq=339/339 fqs=0 (false positive?)
+> [ 25.121789] rcu: (detected by 3, t=2102 jiffies, g=-1091, q=8 ncpus=4)
+> [ 25.130896] Sending NMI from CPU 3 to CPUs 0
+
+**Solution** remove the flags ` -device usb-mouse -device usb-kbd` from qemu command.
+
+It seems that qemu is using [BCM2835 for serial ports and Cortex-A7 as CPU](https://www.qemu.org/docs/master/system/arm/raspi.html) but rpi2b is built with [BCM2836](https://www.raspberrypi.com/documentation/computers/processors.html#bcm2836) which supports Cortex-A7 CPU (where bc2835 doesn't)

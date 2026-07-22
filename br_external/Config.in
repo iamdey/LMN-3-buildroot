@@ -1,0 +1,2 @@
+source "$BR2_EXTERNAL_PI2_CONFIG_PATH/package/hello/Config.in"
+source "$BR2_EXTERNAL_PI2_CONFIG_PATH/package/lmn-3/Config.in"

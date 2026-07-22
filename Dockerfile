@@ -29,4 +29,12 @@ RUN rm ${buildroot_name}.tar.gz
 RUN mv /${buildroot_name} /buildroot
 WORKDIR /buildroot
 
+# TODO: keep or remove? cf. bin/buildroot
+# # The generated files directory
+# ENV O=/dist
+# # FS Overlay and custom packages
+# ENV BR2_EXTERNAL=/br_external/
+# # ignore alert from buildroot that is running as root
+# ENV FORCE_UNSAFE_CONFIGURE=1
+
 ENTRYPOINT [ "/bin/bash" ]

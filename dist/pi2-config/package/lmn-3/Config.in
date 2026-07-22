@@ -1,4 +1,0 @@
-config BR2_PACKAGE_LMN-3
-    bool "lmn-3"
-    help
-      Application externe de test lmn-3.
