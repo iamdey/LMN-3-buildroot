@@ -2,7 +2,7 @@
 
 ## TODO:
 
-- [ ] Start xterm at boot
+- [x] Start xterm at boot
 - [x] 8.5. Building out-of-tree (better files organization)
 - [x] test generated image
 - [ ] Run lmn-3 on start
@@ -26,10 +26,11 @@ bin/buildroot.sh
 > docker container has buildroot environments variables so it's not necessary to repeat it on each commands:
 >
 > ```
-> O=/dist
 > BR2_EXTERNAL=/br_external
 > FORCE_UNSAFE_CONFIGURE=1
 > ```
+>
+> (except for "O" which is mandatory in the command line)
 
 **In docker env:**
 
@@ -37,28 +38,28 @@ Then load the real config file
 
 ```bash
 # docker
-make defconfig BR2_DEFCONFIG=/configs/rpi2_hello_defconfig
+make O=/dist/rpi2-lmn-3 defconfig BR2_DEFCONFIG=/configs/rpi2_lmn-3_defconfig
 ```
 
 Or create a new configuration:
 
 ```bash
 # docker
-make raspberrypi2_defconfig
+make O=/dist/rpi-<name> raspberrypi2_defconfig
 ```
 
 Configure
 
 ```bash
 # docker
-make menuconfig
+make O=/dist/rpi2-lmn-3 menuconfig
 ```
 
 Save minimal configuration
 
 ```bash
 # docker
-make savedefconfig BR2_DEFCONFIG=/configs/rpi2_hello_defconfig
+make O=/dist/rpi2-lmn-3 savedefconfig BR2_DEFCONFIG=/configs/rpi2_hello_defconfig
 ```
 
 _(Once the docker container is stop, fix the permissions on this file: `sudo chown -R $USER: config`)_
@@ -67,12 +68,13 @@ Build (takes a hour the first time, can be restarted if aborted)
 
 ```bash
 # docker
-make
+make O=/dist/rpi2-lmn-3
 ```
 
 Create a sysroot to build lmn-3-DAW
 
 ```bash
+# TODO (not tested at all)
 # docker
 
 # produce dist/host files
