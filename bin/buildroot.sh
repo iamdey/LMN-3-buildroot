@@ -15,10 +15,10 @@ echo "And br_external dir ${brExternal} will be mounted to /${brExternal}."
 echo ""
 echo "Load config then run make"
 echo ""
-echo "    make O=/dist BR2_EXTERNAL=/br_external defconfig BR2_DEFCONFIG=/configs/rpi2_lmn-3_defconfig"
-echo "    make O=/dist BR2_EXTERNAL=/br_external menuconfig"
-echo "    make O=/dist BR2_EXTERNAL=/br_external savedefconfig BR2_DEFCONFIG=/configs/rpi2_lmn-3_defconfig"
-echo "    make O=/dist BR2_EXTERNAL=/br_external"
+echo "    make O=/dist/rpi2-lmn-3 BR2_EXTERNAL=/br_external defconfig BR2_DEFCONFIG=/configs/rpi2_lmn-3_defconfig"
+echo "    make O=/dist/rpi2-lmn-3 BR2_EXTERNAL=/br_external menuconfig"
+echo "    make O=/dist/rpi2-lmn-3 BR2_EXTERNAL=/br_external savedefconfig BR2_DEFCONFIG=/configs/rpi2_lmn-3_defconfig"
+echo "    make O=/dist/rpi2-lmn-3 BR2_EXTERNAL=/br_external"
 
 
 # FORCE_UNSAFE_CONFIGURE allows buildroot to be run as root

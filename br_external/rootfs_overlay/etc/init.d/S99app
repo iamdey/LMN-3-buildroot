@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# Start the app....
+#
+
+case "$1" in
+  start)
+	printf "Starting app: "
+	exec xterm -name "lmn-3" -display :0
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  stop)
+	printf "Stopping app: "
+	killall xterm
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
