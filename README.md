@@ -5,7 +5,8 @@
 - [x] Start xterm at boot
 - [x] 8.5. Building out-of-tree (better files organization)
 - [x] test generated image
-- [ ] Run lmn-3 on start
+- [x] Run lmn-3 on start
+- [ ] support audio
 - [ ] support many screens
 - [ ] support many boards
 - [ ] include some assets
@@ -183,6 +184,8 @@ https://stackoverflow.com/questions/71656946/how-to-build-a-linux-based-custom-o
   manager of your choice. X.org X Window System, X11R7 --> rxtv (Terminal
   emulation program in X
 
+[Buildroot config for audio](https://onlinedocs.microchip.com/oxy/GUID-FC8F7403-0582-42DF-B0F1-D16671334F9E-en-US-1/GUID-47F2FCB5-5714-4CAB-BC4E-F89BF074F2DF.html)
+
 ### deps to install for juce:
 
 (to check)
@@ -231,6 +234,12 @@ Alternatively (to save re-build time) see https://stackoverflow.com/a/49862790
 rm -rf /dist/target
 find /dist/ -name ".stamp_target_installed" -delete
 rm -f /dist/build/host-gcc-final-*/.stamp_host_installed
+```
+
+or
+
+```sh
+make <PKG-NAME>-dirclean
 ```
 
 ### qemu: Kernel panic (qemu)
