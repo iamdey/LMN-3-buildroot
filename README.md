@@ -11,6 +11,36 @@
 - [ ] support many boards
 - [ ] include some assets
 
+## TODO:
+
+### Audio support
+
+cf. https://krenzlin.github.io/AKTpi/
+
+on the Pi:
+
+```bash
+# enable hw
+modprobe snd-bcm2835
+# list cards
+aplay -l
+# default is hdmi, set headphones card
+speaker-test -D plughw:1,0
+```
+
+enable usb sound card
+
+```bash
+modprobe snd-usb-audio
+```
+
+enable midi
+
+```bash
+modprobe snd-seq-midi
+ls /dev/snd/seq
+```
+
 ## Usage:
 
 cf. https://github.com/Enchan1207/rpi-buildroot/wiki/Usage
