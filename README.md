@@ -6,40 +6,10 @@
 - [x] 8.5. Building out-of-tree (better files organization)
 - [x] test generated image
 - [x] Run lmn-3 on start
-- [ ] support audio
+- [x] support audio
 - [ ] support many screens
 - [ ] support many boards
 - [ ] include some assets
-
-## TODO:
-
-### Audio support
-
-cf. https://krenzlin.github.io/AKTpi/
-
-on the Pi:
-
-```bash
-# enable hw
-modprobe snd-bcm2835
-# list cards
-aplay -l
-# default is hdmi, set headphones card
-speaker-test -D plughw:1,0
-```
-
-enable usb sound card
-
-```bash
-modprobe snd-usb-audio
-```
-
-enable midi
-
-```bash
-modprobe snd-seq-midi
-ls /dev/snd/seq
-```
 
 ## Usage:
 
@@ -245,6 +215,30 @@ External options  --->
 System configuration  --->
    Root filesystem overlay directories ($(BR2_EXTERNAL_PI4_CONFIG_PATH)/custom-rootfs)
 ```
+
+### Audio support
+
+Enable audio
+
+cf. https://krenzlin.github.io/AKTpi/
+
+```bash
+# enable hw
+modprobe snd-bcm2835
+# enable usb sound card
+modprobe snd-usb-audio
+# enable midi
+modprobe snd-seq-midi
+
+# list cards
+aplay -l
+# default is hdmi, set headphones card
+speaker-test -D plughw:1,0
+ls /dev/snd/seq
+```
+
+Then set default device
+https://www.alsa-project.org/wiki/Setting_the_default_device
 
 ## Troubleshoutings
 
