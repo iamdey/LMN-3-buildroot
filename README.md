@@ -9,6 +9,7 @@
 - [x] support audio
 - [ ] support many screens
 - [ ] support many boards
+- [ ] auto resize
 - [ ] include some assets
 
 ## Usage:
