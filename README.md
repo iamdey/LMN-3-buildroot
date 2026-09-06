@@ -7,12 +7,29 @@
 - [x] test generated image
 - [x] Run lmn-3 on start
 - [x] support audio
+- [ ] shutdown button
 - [ ] support many screens
 - [ ] support many boards
 - [ ] auto resize
 - [ ] include some assets
 
-## Usage:
+## Features
+
+This custom linux distribution is meant to run the “daw in a box”, the [LMN-3](https://github.com/FundamentalFrequency/LMN-3-DAW) project on a raspberry pi.
+
+- run on rasberry-pi 2b.
+- boot the app in less than 45 seconds.
+- includes required audio libraries.
+- set default audio on headphones output.
+
+## Usage
+
+TBD
+
+## Development:
+
+> Note: this is built on top of docker which is not recommanded at all by buildroot since it's very slow compared to standard usage.
+> Optionnaly you can install natively your own version of buildroot and use the same commands and configs. Otherwise please install [docker engine](https://docs.docker.com/engine/install/).
 
 cf. https://github.com/Enchan1207/rpi-buildroot/wiki/Usage
 
